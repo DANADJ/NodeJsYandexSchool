@@ -67,7 +67,7 @@ const MyForm = (function () {
 
 		if (valid) {
 
-			valid = /.+?@ya.ru|.+?@yandex.ru|.+?@yandex.ua|.+?@yandex.by|.+?@yandex.kz|.+?@yandex.com./i.test(emailDataString);
+			valid = /.+?@ya.ru|.+?@yandex.ru|.+?@yandex.ua|.+?@yandex.by|.+?@yandex.kz|.+?@yandex.com/i.test(emailDataString);
 
 		}
 
@@ -148,6 +148,7 @@ const MyForm = (function () {
 		let validateResult = validate();
 
 		if (validateResult.isValid) {
+			event.preventDefault();
 			return;
 		}
 
