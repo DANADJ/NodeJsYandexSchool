@@ -61,21 +61,53 @@ const MyForm = (function () {
 
 	}
 
+	function validateEmail(emailDataString) {
+
+		let valid = emailDataString.split('@').length === 2;
+
+		if (valid) {
+
+			valid = /.+?@ya.ru|.+?@yandex.ru|.+?@yandex.ua|.+?@yandex.by|.+?@yandex.kz|.+?@yandex.com./i.test(emailDataString);
+
+		}
+
+		return valid;
+
+	}
+
+	function validatePhone(phoneDataString) {
+		return true;
+	}
+
 
 	/**
 	 *
 	 */
 	function validate() {
 
-		let isValidate = true,
+		let validateResultObject = {
+				isValid: true,
+				errorFields: []
+			},
 			dataObject = getData();
 
-		console.log(validateFio(dataObject.fio));
-
-		return {
-			isValid: false,
-			errorFields: ['', '']
+		if(!validateFio(dataObject.fio)){
+			validateResultObject.errorFields.push(propertiesNames.fio);
 		}
+
+		if(!validateEmail(dataObject.email)){
+			validateResultObject.errorFields.push(propertiesNames.email);
+		}
+
+		if(!validatePhone(dataObject.phone)){
+			validateResultObject.errorFields.push(propertiesNames.phone);
+		}
+
+		if(validateResultObject.errorFields.length){
+			validateResultObject.isValid = false;
+		}
+
+		return validateResultObject;
 	}
 
 
