@@ -55,15 +55,15 @@ const MyForm = (function () {
 	}
 
 
+	/**
+	 *
+	 */
 	function validateFio(fioDataString) {
 
-		let strings = fioDataString.trim().split(' ').filter(item => item),
-			valid = strings.length == 3;
+		let valid = !!fioDataString.toString().length;
 
-		if (valid) {
-
-			valid = strings.join('').split('').every(symbol => /[a-zа-яё]/i.test(symbol));
-
+		if(valid){
+			valid = /^(?:(?:[a-z]+ ){2}[a-z]+|(?:[а-яё]+ ){2}[а-яё]+)$/i.test(fioDataString);
 		}
 
 		return valid;
@@ -76,11 +76,11 @@ const MyForm = (function () {
 	 */
 	function validateEmail(emailDataString) {
 
-		let valid = emailDataString.split('@').length === 2;
+		let valid = !!emailDataString.toString().length;
 
 		if (valid) {
 
-			valid = /.+?@ya.ru|.+?@yandex.ru|.+?@yandex.ua|.+?@yandex.by|.+?@yandex.kz|.+?@yandex.com/i.test(emailDataString);
+			valid = /^(?:[^@ "]+?|"[^"]+")@(?:ya.ru|yandex.ru|yandex.ua|yandex.by|yandex.kz|yandex.com)$/i.test(emailDataString);
 
 		}
 
@@ -94,11 +94,11 @@ const MyForm = (function () {
 	 */
 	function validatePhone(phoneDataString) {
 
-		let valid = phoneDataString.trim().length === 16;
+		let valid = !!phoneDataString.toString().length;
 
 		if (valid) {
 
-			valid = /\+7\(\d{3}\)\d{3}-\d{2}-\d{2}/.test(phoneDataString);
+			valid = /^\+7\(\d{3}\)\d{3}-\d{2}-\d{2}$/.test(phoneDataString);
 
 		}
 
@@ -152,7 +152,7 @@ const MyForm = (function () {
 
 		for (let propName in propertiesNames) {
 			if (propertiesNames.hasOwnProperty(propName)) {
-				dataObject[propName] = elements[propName].value;
+				dataObject[propName] = elements[propName].value.trim();
 			}
 		}
 
@@ -173,6 +173,9 @@ const MyForm = (function () {
 	}
 
 
+	/**
+	 *
+	 */
 	function inputCallback(event) {
 		let currentElement = event.target;
 
@@ -182,6 +185,9 @@ const MyForm = (function () {
 	}
 
 
+	/**
+	 *
+	 */
 	function markWrong(errorFieldsArray) {
 
 		errorFieldsArray.forEach(fieldName => {
@@ -234,7 +240,7 @@ const MyForm = (function () {
 		let dataObject = {
 			fio: 'Гордиенко Валентин Валентинович',
 			email: 'danadj@yandex.ru',
-			phone: '+7(952)277-59-51'
+			phone: '+7(952)111-11-00'
 		};
 
 		setData(dataObject);
