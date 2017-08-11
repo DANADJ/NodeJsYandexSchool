@@ -1,5 +1,6 @@
 const MyForm = (function () {
 
+
 	/**
 	 *
 	 */
@@ -9,6 +10,14 @@ const MyForm = (function () {
 		emailInputId: '#emailInput',
 		phoneInputId: '#phoneInput',
 		submitButtonId: '#submitButton',
+	};
+
+
+	/**
+	 *
+	 */
+	const Classes = {
+		error: 'error',
 	};
 
 
@@ -164,20 +173,51 @@ const MyForm = (function () {
 	}
 
 
+	function inputCallback(event) {
+		let currentElement = event.target;
+
+		currentElement.classList.remove(Classes.error);
+
+		currentElement.removeEventListener('input', inputCallback);
+	}
+
+
+	function markWrong(errorFieldsArray) {
+
+		errorFieldsArray.forEach(fieldName => {
+
+			let fieldElement = elements[fieldName];
+
+			if (!fieldElement.classList.contains(Classes.error)) {
+
+				fieldElement.classList.add(Classes.error);
+
+			}
+
+			fieldElement.addEventListener('input', inputCallback);
+
+		});
+	}
+
+
 	/**
 	 *
 	 */
-	function submit() {
+	function submit(event) {
 		let validateResult = validate();
 
 		console.log(validateResult);
 
-		if (validateResult.isValid) {
+		if (!validateResult.isValid) {
+
+			markWrong(validateResult.errorFields);
+
 			event.preventDefault();
 			return;
 		}
 
 		event.preventDefault();
+		return;
 	}
 
 
