@@ -46,6 +46,22 @@ const MyForm = (function () {
 	}
 
 
+	function validateFio(fioDataString) {
+
+		let strings = fioDataString.trim().split(' ').filter(item => item),
+			valid = strings.length == 3;
+
+		if (valid) {
+
+			valid = strings.join('').split('').every(symbol => /[a-zа-яё]/i.test(symbol));
+
+		}
+
+		return valid;
+
+	}
+
+
 	/**
 	 *
 	 */
@@ -54,8 +70,10 @@ const MyForm = (function () {
 		let isValidate = true,
 			dataObject = getData();
 
+		console.log(validateFio(dataObject.fio));
+
 		return {
-			isValid: true,
+			isValid: false,
 			errorFields: ['', '']
 		}
 	}
@@ -95,7 +113,6 @@ const MyForm = (function () {
 	 *
 	 */
 	function submit() {
-
 		let validateResult = validate();
 
 		if (validateResult.isValid) {
@@ -122,8 +139,8 @@ const MyForm = (function () {
 			phone: '+7(952)277-59-51'
 		};
 
-		setTimeout(()=>{setData(dataObject)}, 3000);
-		setTimeout(()=>{console.log(getData())}, 5000);
+		setData(dataObject);
+		// setTimeout(()=>{console.log(getData())}, 5000);
 
 	});
 
