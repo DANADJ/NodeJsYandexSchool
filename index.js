@@ -61,6 +61,10 @@ const MyForm = (function () {
 
 	}
 
+
+	/**
+	 *
+	 */
 	function validateEmail(emailDataString) {
 
 		let valid = emailDataString.split('@').length === 2;
@@ -75,8 +79,27 @@ const MyForm = (function () {
 
 	}
 
+
+	/**
+	 *
+	 */
 	function validatePhone(phoneDataString) {
-		return true;
+
+		let valid = phoneDataString.trim().length === 16;
+
+		if (valid) {
+
+			valid = /\+7\(\d{3}\)\d{3}-\d{2}-\d{2}/.test(phoneDataString);
+
+		}
+
+		if (valid) {
+
+			valid = phoneDataString.match(/\d/g).reduce((previousValue, currentValue) => +previousValue + +currentValue) <= 30;
+
+		}
+
+		return valid;
 	}
 
 
@@ -91,19 +114,19 @@ const MyForm = (function () {
 			},
 			dataObject = getData();
 
-		if(!validateFio(dataObject.fio)){
+		if (!validateFio(dataObject.fio)) {
 			validateResultObject.errorFields.push(propertiesNames.fio);
 		}
 
-		if(!validateEmail(dataObject.email)){
+		if (!validateEmail(dataObject.email)) {
 			validateResultObject.errorFields.push(propertiesNames.email);
 		}
 
-		if(!validatePhone(dataObject.phone)){
+		if (!validatePhone(dataObject.phone)) {
 			validateResultObject.errorFields.push(propertiesNames.phone);
 		}
 
-		if(validateResultObject.errorFields.length){
+		if (validateResultObject.errorFields.length) {
 			validateResultObject.isValid = false;
 		}
 
@@ -146,6 +169,8 @@ const MyForm = (function () {
 	 */
 	function submit() {
 		let validateResult = validate();
+
+		console.log(validateResult);
 
 		if (validateResult.isValid) {
 			event.preventDefault();
