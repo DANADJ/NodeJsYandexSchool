@@ -18,6 +18,7 @@ const MyForm = (function () {
 	 */
 	const Classes = {
 		error: 'error',
+		submitButtonDisable: 'submit-button-disable',
 	};
 
 
@@ -62,7 +63,7 @@ const MyForm = (function () {
 
 		let valid = !!fioDataString.toString().length;
 
-		if(valid){
+		if (valid) {
 			valid = /^(?:(?:[a-z]+ ){2}[a-z]+|(?:[а-яё]+ ){2}[а-яё]+)$/i.test(fioDataString);
 		}
 
@@ -209,21 +210,53 @@ const MyForm = (function () {
 	/**
 	 *
 	 */
+	function serverRequest() {
+
+		let xhr = new XMLHttpRequest();
+		xhr.responseType = "json";
+		xhr.open("post", elements.myForm.action, true);
+		xhr.send();
+
+		xhr.onreadystatechange = function () {
+			if (this.readyState == 4) {
+				console.log(this.response);
+			}
+		}
+	}
+
+
+	/**
+	 *
+	 */
+	function blockSubmitbutton() {
+		elements.submitButton.disabled = true;
+		if(!elements.submitButton.classList.contains(Classes.submitButtonDisable)){
+			elements.submitButton.classList.add(Classes.submitButtonDisable);
+		}
+	}
+
+
+	/**
+	 *
+	 */
 	function submit(event) {
 		let validateResult = validate();
-
-		console.log(validateResult);
 
 		if (!validateResult.isValid) {
 
 			markWrong(validateResult.errorFields);
 
 			event.preventDefault();
-			return;
+
+		} else {
+
+			blockSubmitbutton();
+
+			serverRequest();
+
+			event.preventDefault();
 		}
 
-		event.preventDefault();
-		return;
 	}
 
 
@@ -233,6 +266,7 @@ const MyForm = (function () {
 	document.addEventListener('DOMContentLoaded', () => {
 
 		initElements();
+		console.dir(elements.myForm);
 		elements.myForm.addEventListener('submit', event => {
 			submit(event);
 		});

@@ -42,13 +42,21 @@
 	border-radius: 5px;
 	cursor: pointer;
 	margin: 0 auto;
-	background-color: #53aeff;
 	color: #ffffff;
 	text-transform: uppercase;
 }
 
-.submit-button:hover{
+.submit-button{
+	background-color: #53aeff;
+}
+
+.submit-button:not(.submit-button-disable):hover{
 	background-color: #dec460;
+}
+
+.submit-button-disable{
+	background-color: rgba(84, 173, 255, 0.50);
+	cursor: not-allowed;
 }
 
 .error {
