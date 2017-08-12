@@ -10,6 +10,7 @@ const MyForm = (function () {
 		emailInputId: '#emailInput',
 		phoneInputId: '#phoneInput',
 		submitButtonId: '#submitButton',
+		resultContainerId: '#resultContainer',
 	};
 
 
@@ -17,8 +18,20 @@ const MyForm = (function () {
 	 *
 	 */
 	const Classes = {
+		success: 'success',
 		error: 'error',
+		progress: 'progress',
 		submitButtonDisable: 'submit-button-disable',
+	};
+
+
+	/**
+	 *
+	 */
+	const ResponseStatuses = {
+		success: 'success',
+		error: 'error',
+		progress: 'progress',
 	};
 
 
@@ -41,6 +54,7 @@ const MyForm = (function () {
 		[propertiesNames.email]: null,
 		[propertiesNames.phone]: null,
 		submitButton: null,
+		resultContainer: null,
 	};
 
 
@@ -53,6 +67,7 @@ const MyForm = (function () {
 		elements[propertiesNames.email] = document.querySelector(Ids.emailInputId);
 		elements[propertiesNames.phone] = document.querySelector(Ids.phoneInputId);
 		elements.submitButton = document.querySelector(Ids.submitButtonId);
+		elements.resultContainer = document.querySelector(Ids.resultContainerId);
 	}
 
 
@@ -210,18 +225,88 @@ const MyForm = (function () {
 	/**
 	 *
 	 */
+	function addClass(className) {
+		elements.resultContainer.classList.remove(Classes.success);
+		elements.resultContainer.classList.remove(Classes.error);
+		elements.resultContainer.classList.remove(Classes.progress);
+
+		elements.resultContainer.classList.add(className);
+
+		console.log(elements.resultContainer.className);
+	}
+
+
+	/**
+	 *
+	 */
+	function successResponseCallback() {
+		addClass(Classes.success);
+
+		elements.resultContainer.innerHTML = 'Success';
+	}
+
+	/**
+	 *
+	 */
+	function errorResponseCallback(responseObject) {
+		addClass(Classes.error);
+
+		elements.resultContainer.innerHTML = responseObject.reason;
+	}
+
+	let counter = 0;
+
+
+	/**
+	 *
+	 */
+	function progressResponseCallback(responseObject) {
+		addClass(Classes.progress);
+
+		console.log(counter);
+
+		if (counter <= 3) {
+			counter++;
+			setTimeout(serverRequest, responseObject.timeout);
+		} else {
+			successResponseCallback();
+		}
+	}
+
+
+	/**
+	 *
+	 */
+	function serverResponseCallback() {
+		let responseObject = this.response,
+			responseStatus = responseObject.status;
+
+		if (responseStatus === ResponseStatuses.success) {
+
+			successResponseCallback();
+
+		} else if (responseStatus === ResponseStatuses.error) {
+
+			errorResponseCallback(responseObject);
+
+		} else if (responseStatus === ResponseStatuses.progress) {
+
+			progressResponseCallback(responseObject);
+
+		}
+	}
+
+
+	/**
+	 *
+	 */
 	function serverRequest() {
 
 		let xhr = new XMLHttpRequest();
-		xhr.responseType = "json";
 		xhr.open("post", elements.myForm.action, true);
+		xhr.responseType = "json";
+		xhr.onload = serverResponseCallback;
 		xhr.send();
-
-		xhr.onreadystatechange = function () {
-			if (this.readyState == 4) {
-				console.log(this.response);
-			}
-		}
 	}
 
 
@@ -230,7 +315,7 @@ const MyForm = (function () {
 	 */
 	function blockSubmitbutton() {
 		elements.submitButton.disabled = true;
-		if(!elements.submitButton.classList.contains(Classes.submitButtonDisable)){
+		if (!elements.submitButton.classList.contains(Classes.submitButtonDisable)) {
 			elements.submitButton.classList.add(Classes.submitButtonDisable);
 		}
 	}

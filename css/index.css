@@ -59,6 +59,18 @@
 	cursor: not-allowed;
 }
 
-.error {
+.input .error {
 	border: 1px solid red;
+}
+
+.result-container .success {
+
+}
+
+.result-container .error {
+
+}
+
+.result-container .progress {
+
 }
