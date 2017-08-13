@@ -6,24 +6,27 @@
 	<link rel="stylesheet" href="css/index.css">
 </head>
 <body>
-<!--<form class="my-form" id="myForm" action="serverResponses/success.json">-->
-<!--<form class="my-form" id="myForm" action="serverResponses/error.json">-->
-<form class="my-form" id="myForm" action="serverResponses/progress.json">
-	<div class="field-container">
-		<label class="label" for="fio-input">Ф.И.О:</label>
-		<input class="input" name="fio" id="fioInput">
-	</div>
-	<div class="field-container">
-		<label class="label" for="email-input">E-mail:</label>
-		<input class="input" name="email" id="emailInput">
-	</div>
-	<div class="field-container">
-		<label class="label" for="phone-input">Телефон:</label>
-		<input class="input" name="phone" id="phoneInput">
-	</div>
-	<button class="submit-button" type="submit" id="submitButton">Отправить</button>
-</form>
-<div class="result-container" id="resultContainer"></div>
+<div class="main-container">
+	<form class="my-form" id="myForm" action="serverResponses/success.json">
+	<!--<form class="my-form" id= "myForm" action="serverResponses/error.json">-->
+	<!--<form class="my-form" id="myForm" action="serverResponses/progress.json">-->
+	<!--<form class="my-form" id="myForm" action="">-->
+		<div class="field-container">
+			<label class="label" for="fio-input">Ф.И.О:</label>
+			<input class="input" name="fio" id="fioInput">
+		</div>
+		<div class="field-container">
+			<label class="label" for="email-input">E-mail:</label>
+			<input class="input" name="email" id="emailInput">
+		</div>
+		<div class="field-container">
+			<label class="label" for="phone-input">Телефон:</label>
+			<input class="input" name="phone" id="phoneInput">
+		</div>
+		<button class="submit-button" type="button" id="submitButton">Отправить</button>
+	</form>
+	<div class="result-container" id="resultContainer"></div>
+</div>
 <script type="text/javascript" src="index.js"></script>
 </body>
 </html>

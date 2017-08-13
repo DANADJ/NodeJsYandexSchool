@@ -1,8 +1,9 @@
-const MyForm = (function () {
+const MyForm = (function (Document) {
 
+	// let counter = 0;
 
 	/**
-	 *
+	 * Идентификаторы элементов используемых на странице
 	 */
 	const Ids = {
 		myFormId: '#myForm',
@@ -15,18 +16,19 @@ const MyForm = (function () {
 
 
 	/**
-	 *
+	 * Классы динамически меняемые у элементов страницы
 	 */
 	const Classes = {
 		success: 'success',
 		error: 'error',
 		progress: 'progress',
 		submitButtonDisable: 'submit-button-disable',
+		resultContainer: 'result-container'
 	};
 
 
 	/**
-	 *
+	 * Возможные варианты статуса в ответе сервера
 	 */
 	const ResponseStatuses = {
 		success: 'success',
@@ -36,7 +38,7 @@ const MyForm = (function () {
 
 
 	/**
-	 *
+	 * Названия свойств для объекта с данными формы
 	 */
 	const propertiesNames = {
 		fio: 'fio',
@@ -46,7 +48,7 @@ const MyForm = (function () {
 
 
 	/**
-	 *
+	 * Карта объектов страницы
 	 */
 	let elements = {
 		myForm: null,
@@ -59,7 +61,8 @@ const MyForm = (function () {
 
 
 	/**
-	 *
+	 * @description - Функция находит на странице все нужные для работы элементы и сохраняет их в объекте "elements"
+	 * @function initElements
 	 */
 	function initElements() {
 		elements.myForm = document.querySelector(Ids.myFormId);
@@ -72,7 +75,10 @@ const MyForm = (function () {
 
 
 	/**
-	 *
+	 * @description - Функция проводит валидацию поля для ввода Ф.И.О
+	 * @function validateFio
+	 * @param {string} fioDataString - Строка полученная из поля Ф.И.О
+	 * @return {boolean} valid - Булев параметр обозначающий пройдена ли валидация
 	 */
 	function validateFio(fioDataString) {
 
@@ -88,7 +94,10 @@ const MyForm = (function () {
 
 
 	/**
-	 *
+	 * @description - Функция проводит валидацию поля для ввода Email
+	 * @function validateEmail
+	 * @param {string} emailDataString - Строка полученная из поля Email
+	 * @return {boolean} valid - Булев параметр обозначающий пройдена ли валидация
 	 */
 	function validateEmail(emailDataString) {
 
@@ -106,7 +115,10 @@ const MyForm = (function () {
 
 
 	/**
-	 *
+	 * @description - Функция проводит валидацию поля для ввода Phone
+	 * @function validatePhone
+	 * @param {string} phoneDataString - Строка полученная из поля Phone
+	 * @return {boolean} valid - Булев параметр обозначающий пройдена ли валидация
 	 */
 	function validatePhone(phoneDataString) {
 
@@ -129,7 +141,9 @@ const MyForm = (function () {
 
 
 	/**
-	 *
+	 * @description - Функция проводит валидацию всех полей формы.
+	 * @function validate
+	 * @return {object} validateResultObject - Объект с результатами валидации
 	 */
 	function validate() {
 
@@ -160,7 +174,9 @@ const MyForm = (function () {
 
 
 	/**
-	 *
+	 * @description - Функция собирает данные из полей формы в объект и возвращает его
+	 * @function getData
+	 * @return {object} dataObject - Объект с данными из полей формы
 	 */
 	function getData() {
 
@@ -177,20 +193,27 @@ const MyForm = (function () {
 
 
 	/**
-	 *
+	 * @description - Функция принимает оъект с даннми для полей формы и устанавливает эти данные в соответствующие поля
+	 * @function setData
 	 */
 	function setData(dataObject) {
 
 		for (let propName in propertiesNames) {
 			if (propertiesNames.hasOwnProperty(propName)) {
-				elements[propName].value = dataObject[propName];
+				if (dataObject.hasOwnProperty(propName)) {
+					if (typeof dataObject[propName] === typeof '') {
+						elements[propName].value = dataObject[propName].toString();
+					}
+				}
 			}
 		}
 	}
 
 
 	/**
-	 *
+	 * @description - Коллбэк выполняется во время первого ввода данных в поле не прошедшее валидацию
+	 * @callback inputCallback
+	 * @param {object} event - Объект события ввода данных в поле формы
 	 */
 	function inputCallback(event) {
 		let currentElement = event.target;
@@ -202,7 +225,9 @@ const MyForm = (function () {
 
 
 	/**
-	 *
+	 * @description - Функция выставляет класс "error" и привязывает обработчик события "inputCallback" всем полям не прошедшим валидацию
+	 * @function markWrong
+	 * @param {string[]} errorFieldsArray -  Массив со строками-именами полей не прошедших валидацию
 	 */
 	function markWrong(errorFieldsArray) {
 
@@ -223,95 +248,122 @@ const MyForm = (function () {
 
 
 	/**
-	 *
+	 * @description - Функция удаляет класс "error" всем полям прошедшим валидацию
+	 * @function unMarkWrong
 	 */
-	function addClass(className) {
+	function unMarkWrong() {
+
+		for (let fieldName in propertiesNames) {
+			let fieldElement = elements[fieldName];
+
+			if (fieldElement.classList.contains(Classes.error)) {
+
+				fieldElement.classList.remove(Classes.error);
+
+			}
+		}
+	}
+
+
+	/**
+	 * @description - функция устанавливает класс принятый через аргумент блоку "resultContainer"
+	 * @function addClassToResultContainer
+	 */
+	function addClassToResultContainer(className) {
 		elements.resultContainer.classList.remove(Classes.success);
 		elements.resultContainer.classList.remove(Classes.error);
 		elements.resultContainer.classList.remove(Classes.progress);
 
 		elements.resultContainer.classList.add(className);
-
-		console.log(elements.resultContainer.className);
 	}
 
 
 	/**
-	 *
+	 * @description - Коллбэк вызываемый при статусе ответа сервера "success". Выставляет соответствующий класс и модержимое блоку "resultContainer"
+	 * @callback successResponseCallback
 	 */
 	function successResponseCallback() {
-		addClass(Classes.success);
+		addClassToResultContainer(Classes.success);
 
 		elements.resultContainer.innerHTML = 'Success';
 	}
 
 	/**
-	 *
+	 * @description - Коллбэк вызываемый при статусе ответа сервера "error". Выставляет соответствующий класс и модержимое блоку "resultContainer"
+	 * @callback errorResponseCallback
 	 */
 	function errorResponseCallback(responseObject) {
-		addClass(Classes.error);
+		addClassToResultContainer(Classes.error);
 
 		elements.resultContainer.innerHTML = responseObject.reason;
 	}
 
-	let counter = 0;
-
 
 	/**
-	 *
+	 * @description - Коллбэк вызываемый при статусе ответа сервера "progress". Выставляет соответствующий класс и модержимое блоку "resultContainer"
+	 * @callback progressResponseCallback
 	 */
 	function progressResponseCallback(responseObject) {
-		addClass(Classes.progress);
+		addClassToResultContainer(Classes.progress);
 
-		console.log(counter);
+		elements.resultContainer.innerHTML = 'Progress...';
 
-		if (counter <= 3) {
-			counter++;
-			setTimeout(serverRequest, responseObject.timeout);
-		} else {
-			successResponseCallback();
-		}
+		/*	if (counter <= 3) {
+		 counter++;
+		 console.log(counter);*/
+		setTimeout(serverRequest, responseObject.timeout);
+		/*} else {
+		 successResponseCallback();
+		 }*/
 	}
 
 
 	/**
-	 *
+	 * @description - Коллбэк вызываемый при получении ответа от сервера. Запускает соответствующую ответу функцию обработки блока "resultContainer"
+	 * @callback serverResponseCallback
 	 */
 	function serverResponseCallback() {
-		let responseObject = this.response,
-			responseStatus = responseObject.status;
 
-		if (responseStatus === ResponseStatuses.success) {
+		if (this.response && this.response.status) {
+			let responseObject = this.response,
+				responseStatus = responseObject.status;
 
-			successResponseCallback();
+			if (responseStatus === ResponseStatuses.success) {
 
-		} else if (responseStatus === ResponseStatuses.error) {
+				successResponseCallback();
 
-			errorResponseCallback(responseObject);
+			} else if (responseStatus === ResponseStatuses.error) {
 
-		} else if (responseStatus === ResponseStatuses.progress) {
+				errorResponseCallback(responseObject);
 
-			progressResponseCallback(responseObject);
+			} else if (responseStatus === ResponseStatuses.progress) {
 
+				progressResponseCallback(responseObject);
+
+			}
 		}
 	}
 
 
 	/**
-	 *
+	 * @description - Функция создаёт и настраивает XHR объект запроса к серверу
+	 * @function serverRequest
+	 * @return {object} xhr - XHR объект запроса к серверу
 	 */
 	function serverRequest() {
 
 		let xhr = new XMLHttpRequest();
-		xhr.open("post", elements.myForm.action, true);
+		xhr.open('post', elements.myForm.action, true);
 		xhr.responseType = "json";
 		xhr.onload = serverResponseCallback;
 		xhr.send();
+
 	}
 
 
 	/**
-	 *
+	 * @description - Функция блокирует кнопку отправки данных формы
+	 * @function blockSubmitbutton
 	 */
 	function blockSubmitbutton() {
 		elements.submitButton.disabled = true;
@@ -324,50 +376,76 @@ const MyForm = (function () {
 	/**
 	 *
 	 */
-	function submit(event) {
+	function resetResultContainer() {
+
+		if (elements.resultContainer.classList.length > 1) {
+			elements.resultContainer.className = Classes.resultContainer;
+		}
+
+		if (elements.resultContainer.innerHTML) {
+			elements.resultContainer.innerHTML = '';
+		}
+	}
+
+
+	/**
+	 * @description - Функция обрабатывает попытки отправки данных из формы
+	 * @function submit
+	 */
+	function submit() {
+
+		resetResultContainer();
+
 		let validateResult = validate();
 
 		if (!validateResult.isValid) {
 
 			markWrong(validateResult.errorFields);
 
-			event.preventDefault();
-
 		} else {
+
+			unMarkWrong();
 
 			blockSubmitbutton();
 
 			serverRequest();
-
-			event.preventDefault();
 		}
 
 	}
 
 
 	/**
-	 *
+	 * Действия запускающиеся после полной загруз DOM дерева
 	 */
-	document.addEventListener('DOMContentLoaded', () => {
+	Document.addEventListener('DOMContentLoaded', () => {
 
+		/**
+		 * Инициализация элементов страницы
+		 */
 		initElements();
-		console.dir(elements.myForm);
-		elements.myForm.addEventListener('submit', event => {
+
+
+		/**
+		 * Добавление обработчика события "submit" для формы
+		 */
+		elements.submitButton.addEventListener('click', event => {
 			submit(event);
 		});
 
-		let dataObject = {
+		/*let dataObject = {
 			fio: 'Гордиенко Валентин Валентинович',
 			email: 'danadj@yandex.ru',
-			phone: '+7(952)111-11-00'
+			phone: '+7(952)111-11-00',
+			home: 'asdad'
 		};
 
-		setData(dataObject);
-		// setTimeout(()=>{console.log(getData())}, 5000);
-
+		setData(dataObject);*/
 	});
 
 
+	/**
+	 * Методы объекта MyForm доступного в глобальной области видимости
+	 */
 	return {
 		validate,
 		getData,
@@ -375,4 +453,4 @@ const MyForm = (function () {
 		submit,
 	};
 
-})();
+})(document);
