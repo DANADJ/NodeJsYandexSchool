@@ -75,7 +75,7 @@ const MyForm = (function (Document) {
 
 
 	/**
-	 * @description - Функция проводит валидацию поля для ввода Ф.И.О
+	 * @description - Функция проводит валидацию поля Ф.И.О
 	 * @function validateFio
 	 * @param {string} fioDataString - Строка полученная из поля Ф.И.О
 	 * @return {boolean} valid - Булев параметр обозначающий пройдена ли валидация
@@ -94,7 +94,7 @@ const MyForm = (function (Document) {
 
 
 	/**
-	 * @description - Функция проводит валидацию поля для ввода Email
+	 * @description - Функция проводит валидацию поля Email
 	 * @function validateEmail
 	 * @param {string} emailDataString - Строка полученная из поля Email
 	 * @return {boolean} valid - Булев параметр обозначающий пройдена ли валидация
@@ -115,7 +115,7 @@ const MyForm = (function (Document) {
 
 
 	/**
-	 * @description - Функция проводит валидацию поля для ввода Phone
+	 * @description - Функция проводит валидацию поля Phone
 	 * @function validatePhone
 	 * @param {string} phoneDataString - Строка полученная из поля Phone
 	 * @return {boolean} valid - Булев параметр обозначающий пройдена ли валидация
