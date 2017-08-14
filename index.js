@@ -1,6 +1,9 @@
 const MyForm = (function (Document) {
 
-	// let counter = 0;
+	/**
+	 * Переменная для хранения объекта данных из формы
+	 */
+	let fieldsDataObject = null;
 
 	/**
 	 * Идентификаторы элементов используемых на странице
@@ -148,20 +151,21 @@ const MyForm = (function (Document) {
 	function validate() {
 
 		let validateResultObject = {
-				isValid: true,
-				errorFields: []
-			},
-			dataObject = getData();
+			isValid: true,
+			errorFields: []
+		};
 
-		if (!validateFio(dataObject.fio)) {
+		fieldsDataObject = getData();
+
+		if (!validateFio(fieldsDataObject.fio)) {
 			validateResultObject.errorFields.push(propertiesNames.fio);
 		}
 
-		if (!validateEmail(dataObject.email)) {
+		if (!validateEmail(fieldsDataObject.email)) {
 			validateResultObject.errorFields.push(propertiesNames.email);
 		}
 
-		if (!validatePhone(dataObject.phone)) {
+		if (!validatePhone(fieldsDataObject.phone)) {
 			validateResultObject.errorFields.push(propertiesNames.phone);
 		}
 
@@ -200,6 +204,7 @@ const MyForm = (function (Document) {
 
 		for (let propName in propertiesNames) {
 			if (propertiesNames.hasOwnProperty(propName)) {
+				elements[propName].value = '';
 				if (dataObject.hasOwnProperty(propName)) {
 					if (typeof dataObject[propName] === typeof '') {
 						elements[propName].value = dataObject[propName].toString();
@@ -298,6 +303,7 @@ const MyForm = (function (Document) {
 		elements.resultContainer.innerHTML = responseObject.reason;
 	}
 
+	// let counter = 0;
 
 	/**
 	 * @description - Коллбэк вызываемый при статусе ответа сервера "progress". Выставляет соответствующий класс и модержимое блоку "resultContainer"
@@ -306,15 +312,13 @@ const MyForm = (function (Document) {
 	function progressResponseCallback(responseObject) {
 		addClassToResultContainer(Classes.progress);
 
-		elements.resultContainer.innerHTML = 'Progress...';
-
-		/*	if (counter <= 3) {
-		 counter++;
-		 console.log(counter);*/
-		setTimeout(serverRequest, responseObject.timeout);
+		/*if (counter <= 3) {
+			counter++;
+			console.log(counter);*/
+			setTimeout(serverRequest, responseObject.timeout);
 		/*} else {
-		 successResponseCallback();
-		 }*/
+			successResponseCallback();
+		}*/
 	}
 
 
@@ -354,9 +358,10 @@ const MyForm = (function (Document) {
 
 		let xhr = new XMLHttpRequest();
 		xhr.open('post', elements.myForm.action, true);
+		xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
 		xhr.responseType = "json";
 		xhr.onload = serverResponseCallback;
-		xhr.send();
+		xhr.send(JSON.stringify(fieldsDataObject));
 
 	}
 
@@ -374,7 +379,8 @@ const MyForm = (function (Document) {
 
 
 	/**
-	 *
+	 * @description Сброс внешнего вида и содержимого контейнера "resultContainer"
+	 * @function resetResultContainer
 	 */
 	function resetResultContainer() {
 
@@ -435,7 +441,7 @@ const MyForm = (function (Document) {
 		/*let dataObject = {
 			fio: 'Гордиенко Валентин Валентинович',
 			email: 'danadj@yandex.ru',
-			phone: '+7(952)111-11-00',
+			phone: '+7(555)211-11-11',
 			home: 'asdad'
 		};
 
